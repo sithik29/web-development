@@ -1,36 +1,62 @@
-// import logo from './logo.svg';
-import { useEffect, useState } from 'react';
-import './App.css';
-import UserPage from './container/UserPage';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
-import Login from './components/Login';
-import SignUp from './components/SignUp';
-import UserLogin from './components/UserLogin';
-import Dashboard from './components/Dashboard';
-// import Dashboard from './components/dashboard/Dashboard';
+import React from 'react';
+import Header from './components/header';
+import Footer from './components/footer';
+import Register from './pages/register';
+import Home from './pages/Homepage';
+import AboutUs from './pages/aboutus';
+import Profile from './pages/profile';  // Import the Profile component
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/login';
+import Dashboard from "./pages/dashboard";
+import Faq from './pages/faq';
+import Terms from './pages/terms';
+import Privacy from './pages/privacy';
 
 function App() {
-  const [username,setUsername] = useState("");
+  // Define an array of routes that should have the header and footer
+  const routesWithHeaderAndFooter = [
+    '/register',
+    '/',
+    '/aboutus',
+    '/profile',  // Add '/profile' to the list of routes
+  ];
+
+  // Helper function to check if a route should have the header and footer
+  const shouldShowHeaderAndFooter = (pathname) => {
+    return routesWithHeaderAndFooter.includes(pathname);
+  };
+
+  // Define a sample user object
+  const user = {
+    name: 'John Doe',
+    // Add other user properties like email, etc.
+  };
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/signup' element={<SignUp/>}/>
-        <Route path='/adminlogin' element={<Login/>}/>
-        <Route path="/userlogin" element={<UserLogin/>}/>
-        <Route path='/admin/dashboard' element={<Dashboard/>}/>
-        {/* <Route path='/:userName' element={<UserPage username={username} setUsername={setUsername} />} />
-        <Route path='*' element={<RedirectComp username={username} />}></Route> */}
-      </Routes>
-    </BrowserRouter>
+    <Router>
+      <div className="App">
+        {/* Conditionally render the Header component based on the route */}
+        {shouldShowHeaderAndFooter(window.location.pathname) && <Header />}
+        
+        <main>
+          <Routes>
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/homepage" element={<Home />} />
+            <Route path="/aboutus" element={<AboutUs />} />
+            <Route path="/faq" element={<Faq />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/profile" element={<Profile user={user} />} /> {/* Pass the user object to the Profile component */}
+          </Routes>
+        </main>
+
+        {/* Conditionally render the Footer component based on the route */}
+        {shouldShowHeaderAndFooter(window.location.pathname) && <Footer />}
+      </div>
+    </Router>
   );
 }
-
-// function RedirectComp({ username }) {
-//   const nav = useNavigate();
-//   useEffect(() => {
-//     nav(`/${username}`)
-//   }, [username])
-// }
 
 export default App;
